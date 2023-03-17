@@ -1,61 +1,67 @@
-// const person={
-//     firstName:'deep',
-//     lastName:'kumari',
-//     age:'22',
-//     hobbies:['dancing','workout'],
-//     address:{
-//         street:'jatav mohalla',
-//         city:'delhi',
-//         knownnearplace:'sarita vihar'
-//     }
+var form = document.getElementById('addForm');
+var itemList = document.getElementById('items');
+var filter = document.getElementById('filter');
 
-// }
-// console.log(person.address);
+// Form submit event
+form.addEventListener('submit', addItem);
+// Delete event
+itemList.addEventListener('click', removeItem);
+// Filter event
+filter.addEventListener('keyup', filterItems);
 
-// const todos=[{
-//     id:1,
-//     text:'take out trash',
-//     isCompleted:true
-// },
-// {
-//     id:2,
-//     text:'meeting with my',
-//     isCompleted:true
-// },
-// {
-//     id:3,
-//     text:'dentist opt',
-//     isCompleted:false
-// }];
-// console.log(todos[1].text)
+// Add item
+function addItem(e){
+  e.preventDefault();
 
-// const todoJson=JSON.stringify(todos);
-// console.log(todoJson);
+  // Get input value
+  var newItem = document.getElementById('item').value;
 
-// for(let i=0;i<todos.length;i++){
-//     console.log(todos[i])
-// }
+  // Create new li element
+  var li = document.createElement('li');
+  // Add class
+  li.className = 'list-group-item';
+  // Add text node with input value
+  li.appendChild(document.createTextNode(newItem));
 
-// for(let todo of todos){
-//     console.log(todo)
-// }
-// todos.forEach(function(deep)
-// {
-//     console.log(deep.text)
-// })
-function Person(firstName,lastName,dob){
-    this.firstName=firstName;
-    this.lastName=lastName;
-    this.dob=new Date(dob);
-    this.getBirthYear =function(){
-        return this.dob.getFullYear();
-    }
-   
-    this.getFullName=function(){
-        return`${this.firstName} ${this.lastName}`;
-    }
+  // Create del button element
+  var deleteBtn = document.createElement('button');
+
+  // Add classes to del button
+  deleteBtn.className = 'btn btn-danger btn-sm float-right delete';
+
+  // Append text node
+  deleteBtn.appendChild(document.createTextNode('X'));
+
+  // Append button to li
+  li.appendChild(deleteBtn);
+
+  // Append li to list
+  itemList.appendChild(li);
 }
-const p1=new Person('deep','dee','15-04-2002');
-console.log(p1.getFullName())
-console.log(p1.getBirthYear())
-console.log(p1)
+
+// Remove item
+function removeItem(e){
+  if(e.target.classList.contains('delete')){
+    if(confirm('Are You Sure?')){
+      var li = e.target.parentElement;
+      itemList.removeChild(li);
+    }
+  }
+}
+
+// Filter Items
+function filterItems(e){
+  // convert text to lowercase
+  var text = e.target.value.toLowerCase();
+  // Get lis
+  var items = itemList.getElementsByTagName('li');
+  // Convert to an array
+  Array.from(items).forEach(function(item){
+    var itemName = item.firstChild.textContent;
+    if(itemName.toLowerCase().indexOf(text) != -1){
+      item.style.display = 'block';
+    } else {
+      item.style.display = 'none';
+    }
+  });
+}
